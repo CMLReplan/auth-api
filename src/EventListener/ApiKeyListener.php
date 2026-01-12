@@ -17,27 +17,23 @@ class ApiKeyListener
         $this->apiKey = $apiKey;
     }
 
-    public function onKernelRequest(RequestEvent $event)
+    public function onKernelRequest(RequestEvent $event): void
     {
         $request = $event->getRequest();
 
+        // Only protect API routes
         if (!str_starts_with($request->getPathInfo(), '/api')) {
             return;
         }
 
-        // DEBUG LOGS — ADD HERE
-      //  error_log('--- HEADERS ---');
-      //  error_log(json_encode($request->headers->all()));
+        // Read Authorization header (Railway & proxy safe)
+        $authHeader = $request->headers->get('Authorization');
+        $providedKey = null;
 
-      //  error_log('--- SERVER ---');
-      //  error_log(json_encode($request->server->all()));
-
-        $providedKey = $request->headers->get('X-API-KEY')
-        ?? $request->headers->get('x-api-key')
-        ?? $request->server->get('HTTP_X_API_KEY');
-
-      //  error_log('Provided API Key: ' . var_export($providedKey, true));
-      //  error_log('Expected API Key: ' . $this->apiKey);
+        // Expected format: Authorization: ApiKey your_api_key_here
+        if ($authHeader && str_starts_with($authHeader, 'ApiKey ')) {
+            $providedKey = substr($authHeader, 7);
+        }
 
         if ($providedKey !== $this->apiKey) {
             $event->setResponse
