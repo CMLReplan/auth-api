@@ -11,7 +11,6 @@ class ApiKeyListener
 {
     private string $apiKey;
 
-
     public function __construct(string $apiKey)
     {
         $this->apiKey = $apiKey;
@@ -26,8 +25,14 @@ class ApiKeyListener
             return;
         }
 
-        // Read Authorization header (Railway & proxy safe)
-        $authHeader = $request->headers->get('Authorization');
+        // Read Authorization header from ALL possible sources
+        $authHeader =
+            $request->headers->get('Authorization')
+            ?? $request->server->get('HTTP_AUTHORIZATION')
+            ?? $_SERVER['HTTP_AUTHORIZATION']
+            ?? getenv('HTTP_AUTHORIZATION')
+            ?? null;
+
         $providedKey = null;
 
         // Expected format: Authorization: ApiKey your_api_key_here
