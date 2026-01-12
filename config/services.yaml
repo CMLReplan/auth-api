@@ -24,6 +24,6 @@ services:
 
     App\EventListener\ApiKeyListener:
         arguments:
-            $apiKey: '%env(APP_API_KEY)%'
+            $apiKey: '%env(resolve:APP_API_KEY)%'
         tags:
             - { name: kernel.event_listener, event: kernel.request }
