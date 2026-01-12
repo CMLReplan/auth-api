@@ -36,6 +36,9 @@ class ApiKeyListener
         ?? $request->headers->get('x-api-key')
         ?? $request->server->get('HTTP_X_API_KEY');
 
+        error_log('Provided API Key: ' . var_export($providedKey, true));
+        error_log('Expected API Key: ' . $this->apiKey);
+
         if ($providedKey !== $this->apiKey) {
             $event->setResponse
                 (new JsonResponse(['error' => 'Unauthorized. Invalid API Key.'
