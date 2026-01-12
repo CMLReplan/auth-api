@@ -26,18 +26,18 @@ class ApiKeyListener
         }
 
         // DEBUG LOGS — ADD HERE
-        error_log('--- HEADERS ---');
-        error_log(json_encode($request->headers->all()));
+      //  error_log('--- HEADERS ---');
+      //  error_log(json_encode($request->headers->all()));
 
-        error_log('--- SERVER ---');
-        error_log(json_encode($request->server->all()));
+      //  error_log('--- SERVER ---');
+      //  error_log(json_encode($request->server->all()));
 
         $providedKey = $request->headers->get('X-API-KEY')
         ?? $request->headers->get('x-api-key')
         ?? $request->server->get('HTTP_X_API_KEY');
 
-        error_log('Provided API Key: ' . var_export($providedKey, true));
-        error_log('Expected API Key: ' . $this->apiKey);
+      //  error_log('Provided API Key: ' . var_export($providedKey, true));
+      //  error_log('Expected API Key: ' . $this->apiKey);
 
         if ($providedKey !== $this->apiKey) {
             $event->setResponse
