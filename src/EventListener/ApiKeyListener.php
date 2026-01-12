@@ -25,12 +25,21 @@ class ApiKeyListener
             return;
         }
 
+        // DEBUG LOGS — ADD HERE
+        error_log('--- HEADERS ---');
+        error_log(json_encode($request->headers->all()));
 
-        $providedKey = $request->headers->get('X-API-KEY');
+        error_log('--- SERVER ---');
+        error_log(json_encode($request->server->all()));
+
+        $providedKey = $request->headers->get('X-API-KEY')
+        ?? $request->headers->get('x-api-key')
+        ?? $request->server->get('HTTP_X_API_KEY');
 
         if ($providedKey !== $this->apiKey) {
             $event->setResponse
-                (new JsonResponse(['error' => 'Unauthorized. Invalid API Key.'], 401)
+                (new JsonResponse(['error' => 'Unauthorized. Invalid API Key.'
+                ], 401)
             );
         }
     }
