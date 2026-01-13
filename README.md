@@ -57,3 +57,5 @@ composer install
 php bin/console doctrine:database:create
 php bin/console doctrine:migrations:migrate
 symfony server:start
+
+Note: This project is a recreated implementation based on professional experience. The original production code is proprietary and not publicly available.
